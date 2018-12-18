@@ -2,7 +2,7 @@
 
 set -e;
 
-USEFUL_PACKAGES="sysstat mlocate telnet dos2unix wget curl openssh-client";
+USEFUL_PACKAGES="sysstat mlocate telnet dos2unix wget curl openssh-client openssh-server";
 USER_LIST="habiel tevfik andy";
 
 install_useful_packages_centos(){
@@ -37,12 +37,7 @@ create_user_ubuntu()
 
 create_ssh_keys()
 {
-# This function does several things:
-# 1. Creates a user if it does not exist
-# 2. Copies the folder ~ec2-user/.ssh to the created user to enable logging in via existing key
-# 3. Creates a file gives the user sudo rights and copies it to the folder /etc/sudoers.d/
   USER="$1";
-
   HOME_DIRECTORY="$(cat /etc/passwd | grep "${USER}" | cut -d: -f6)";
   readlink -e "${HOME_DIRECTORY}";
   ID_FILE="${HOME_DIRECTORY}/.ssh/id_rsa";
@@ -97,10 +92,9 @@ case ${OPERATING_SYSTEM} in
   done
   ;;
 *)
-  Message="I seem to be running with an nonexistent amount of disk space..."
+  echo "Could not determine operating system";
+  exit 1;
   ;;
 esac
-
-
 
 exit 0;
