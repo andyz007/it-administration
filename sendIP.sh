@@ -20,5 +20,3 @@ then
 else
         echo "no public IP change!"
 fi
-
-crontab -e 
