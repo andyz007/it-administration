@@ -1,5 +1,8 @@
 #!/bin/bash
-# check and send ip address to email
+
+# Send Email when IP Address Changes
+# Source:
+# https://ariandy1.wordpress.com/2014/04/08/linux-send-email-when-ip-address-changes/
  
 MYIP="$(ifconfig eno1 | grep 'inet'| awk '{print $2}' | cut -d ':' -f 2)";
 PUBLICIP="$(curl https://ipinfo.io/ip)"
@@ -20,3 +23,10 @@ then
 else
         echo "no public IP change!"
 fi
+
+# Enable cron job if it is not enabled
+SCRIPT_FILE="$(readlink -e "${BASH_SOURCE}")";
+FILENAME="$(basename "${SCRIPT_FILE}")";
+crontab -l | grep "${FILENAME}" && exit 0;
+find /etc/cron*/${FILENAME} && exit 0;
+cp -v "${SCRIPT_FILE}" "/etc/cron.hourly/";
